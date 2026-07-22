@@ -1,64 +1,155 @@
 # Pipeline de Anotação de Variante (NGS)
 
-Pipeline reprodutível para controle de qualidade, alinhamento, chamada de variante e anotação de variantes a partir de dados de sequenciamento NGS, implementado em ambiente Docker.
+Pipeline reprodutível para análise de variantes genômicas utilizando dados de sequenciamento de nova geração (NGS), desde o controle de qualidade das reads até a anotação funcional e clínica das variantes.
 
-🎯 **Objetivos**
-- Garantir reprodutibilidade por meio de containerização
-- Executar um workflow completo de FASTQ → VCF anotado
-- Aprendizado de alinhamento de sequência, chamada de variante e anotação de variante
+Todo o ambiente foi containerizado em Docker para garantir reprodutibilidade e consistência entre diferentes sistemas operacionais.
 
-🧰 **Tecnologias Utilizadas** <br>
-**Bioinformática**
-- Fastp – controle de qualidade e filtragem de reads
-- BWA-MEM – alinhamento ao genoma de referência
-- Samtools – manipulação, ordenação e indexação de BAM
-- Bcftools – chamada e anotação de variantes
-- vt – decomposição e normalização de variantes
-- Ensembl VEP – predição de impacto funcional
+---
 
-**Análise de dados** <br>
-Python (Em andamento)
+## Objetivo
 
-**Infraestrutura** <br>
-Docker + Miniconda para portabilidade e consistência de versões
+Este projeto foi desenvolvido para implementar um pipeline completo de análise de variantes utilizando ferramentas amplamente empregadas em bioinformática.
 
-🧬 **Referência Genômica**
-- Montagem: GRCh38
-- Para fins didáticos e otimização de recursos, foi utilizado apenas o cromossomo 20
-- O FASTA foi indexado com: samtools faidx e bwa index
+O workflow contempla:
 
-**Interpretação dos resultados** <br>
-Foram analisadas 3.133 variantes genômicas localizadas no cromossomo 20. As variantes foram anotadas utilizando o Ensembl Variant Effect Predictor (VEP) e posteriormente analisadas em Python.
+- Controle de qualidade das reads
+- Alinhamento ao genoma de referência
+- Processamento de arquivos BAM
+- Chamada de variantes
+- Normalização das variantes
+- Anotação clínica e funcional
+- Análise exploratória dos resultados em Python
 
-Registro clínico das variantes
-* A maioria das variantes não possui registro clínico conhecido.
-* Variantes com registro no ClinVar: 47
-* Variantes sem registro clínico: 3086
+Além da execução do pipeline, o projeto teve como foco compreender o propósito de cada etapa, interpretar os resultados produzidos e construir um fluxo reproduzível utilizando Docker.
 
-Entre as variantes registradas no ClinVar, a maioria apresenta classificação benigna ou provavelmente benigna: <br>
+---
 
-Benign:                                            24 <br>
-Likely_benign:                                     10 <br>
-Uncertain_significance:                            10 <br>
-Benign/Likely_benign:                               2 <br>
-Conflicting_classifications_of_pathogenicity:       1 <br>
+## Tecnologias utilizadas
 
+### Bioinformática
 
-Todas as variantes foram classificadas pelo VEP com IMPACT = MODIFIER, indicando que elas provavelmente estão em regiões não codificantes ou possuem impacto funcional baixo ou desconhecido. Nenhuma variante com impacto HIGH ou MODERATE foi identificada.
+| Ferramenta | Finalidade |
+|------------|------------|
+| Fastp | Controle de qualidade e filtragem das reads |
+| BWA-MEM | Alinhamento das reads ao genoma de referência |
+| SAMtools | Conversão, ordenação e indexação de arquivos BAM |
+| BCFtools | Chamada e manipulação de variantes |
+| vt | Normalização e decomposição das variantes |
+| Ensembl VEP | Predição do impacto funcional das variantes |
+| ClinVar | Informações sobre relevância clínica das variantes |
 
-A análise da posição genômica mostrou que as variantes estão distribuídas ao longo de todo o cromossomo 20, com uma região de maior concentração próxima a 30 Mb. Essa distribuição pode refletir regiões com maior densidade de variação ou maior cobertura de sequenciamento.
+### Infraestrutura
 
+- Docker
+- Miniconda
+- Linux
+- Bash
 
-📊 **Visão Geral do Workflow**
+### Análise de dados
+
+- Python
+- Pandas
+- Matplotlib
+
+---
+
+## Referência genômica
+
+- Genoma de referência: **GRCh38**
+- Cromossomo analisado: **20**
+
+Para reduzir o tempo computacional e facilitar a reprodução do pipeline, foi utilizado apenas o cromossomo 20 como conjunto de dados de demonstração.
+
+O genoma foi indexado utilizando:
+
+- `samtools faidx`
+- `bwa index`
+
+---
+
+# Workflow
+
 ```mermaid
 graph TD
     A[FASTQ] --> B(Quality Control - Fastp)
-    B --> C(Subamostragem de reads)
-    C --> D(Alinhamento - BWA-MEM)
-    D --> E(BAM ordenado + indexado - Samtools)
-    E --> F(Variant Calling - Bcftools)
-    F --> G(Normalização - vt)
-    G --> H(Anotação clínica - ClinVar)
-    H --> I(Anotação funcional - VEP)
-    I --> J[Análise dos dados em Python]
+    B --> C(Subsample)
+    C --> D(BWA-MEM)
+    D --> E(SAMtools)
+    E --> F(BCFtools)
+    F --> G(vt)
+    G --> H(ClinVar)
+    H --> I(VEP)
+    I --> J(Python Analysis)
 ```
+
+---
+
+# Resultados
+
+Após a execução do pipeline foram identificadas **3.133 variantes** no cromossomo 20.
+
+As variantes passaram por anotação clínica (ClinVar) e funcional (VEP), permitindo avaliar tanto sua relevância clínica quanto seu possível impacto biológico.
+
+## Registro clínico
+
+| Classificação | Quantidade |
+|--------------|-----------:|
+| Total de variantes | 3133 |
+| Com registro no ClinVar | 47 |
+| Sem registro clínico | 3086 |
+
+Entre as variantes registradas:
+
+| Classificação | Quantidade |
+|--------------|-----------:|
+| Benign | 24 |
+| Likely benign | 10 |
+| Uncertain significance | 10 |
+| Benign / Likely benign | 2 |
+| Conflicting classifications | 1 |
+
+A maior parte das variantes registradas possui classificação **benigna**, indicando ausência de associação conhecida com doenças.
+
+---
+
+## Impacto funcional
+
+Segundo a anotação realizada pelo Ensembl VEP:
+
+- 100% das variantes receberam classificação **MODIFIER**
+
+Isso indica que as variantes identificadas estão predominantemente localizadas em regiões não codificantes ou apresentam impacto funcional baixo ou ainda desconhecido.
+
+Nenhuma variante foi classificada como **HIGH** ou **MODERATE**.
+
+---
+
+## Distribuição genômica
+
+A distribuição das variantes ao longo do cromossomo mostrou cobertura em praticamente toda sua extensão, com maior concentração próxima à região de **30 Mb**.
+
+Essa concentração pode estar relacionada à cobertura do sequenciamento ou à maior densidade de variantes naquela região.
+
+---
+
+## Principais competências demonstradas
+
+Este projeto demonstra experiência prática em:
+
+- Desenvolvimento de pipelines em Bioinformática
+- Linux e linha de comando
+- Docker para reprodutibilidade
+- Processamento de arquivos FASTQ, BAM e VCF
+- Variant Calling
+- Anotação funcional de variantes
+- Interpretação de resultados de NGS
+- Organização de workflows reproduzíveis
+- Análise de dados em Python
+
+---
+
+## Próximos passos
+
+- Automatização completa do pipeline com Bash
+- Geração automática de relatórios
+- Implementação de workflow utilizando Nextflow ou Snakemake
