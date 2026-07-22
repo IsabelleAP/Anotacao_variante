@@ -27,9 +27,7 @@ fi
 
 docker exec $CONTAINER_NAME bash -c '
 
-echo "======================================="
 echo "Pipeline de Anotação de Variante (NGS)"
-echo "======================================="
 
 echo "[1/6] Provisionando ambiente..."
 bash 01_provisionamento_ambiente/provisionamento_ambiente.sh
@@ -49,9 +47,6 @@ bash 05_anotacao_variante/05_anotacao_variante.sh
 echo "[6/6] Análise dos resultados..."
 python3 06_analise_dados/analise.py
 
-echo ""
-echo "======================================="
 echo "Pipeline finalizado com sucesso!"
-echo "======================================="
 
 '
