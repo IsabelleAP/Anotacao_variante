@@ -1,2 +1,60 @@
+# Bancos de dados
 05_anotacao_variante/databases/
-05_anotacao_variante/databases/
+
+# Arquivos gerados pelo pipeline
+# FASTQ
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+
+# BAM
+*.bam
+*.bai
+
+# SAM
+*.sam
+
+# VCF
+*.vcf
+*.vcf.gz
+*.vcf.gz.tbi
+
+# BCF
+*.bcf
+*.csi
+
+# Índices
+*.fai
+*.dict
+*.amb
+*.ann
+*.bwt
+*.pac
+*.sa
+
+# Logs
+*.log
+
+# Relatórios
+multiqc_data/
+multiqc_report.html
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Ambiente Conda
+.env
+.conda/
+
+# Docker
+*.tar
