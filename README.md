@@ -149,7 +149,4 @@ Este projeto demonstra experiência prática em:
 ---
 
 ## Próximos passos
-
-- Automatização completa do pipeline com Bash
-- Geração automática de relatórios
 - Implementação de workflow utilizando Nextflow ou Snakemake
